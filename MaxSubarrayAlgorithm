@@ -1,0 +1,77 @@
+import java.util.*;
+public class Main
+{
+    public static int[] findMaximumCrossSubarray(int A[],int low,int mid,int high)
+    {   int cross[]=new int[3];
+    int maxleft=0;
+    int maxright=0;
+        int leftsum=-10000;
+        int sum=0;
+        for(int i=mid;i>=low;i--)
+        {
+            sum=sum+A[i];
+            if(sum>leftsum){
+                leftsum=sum;
+                maxleft=i;
+            }
+        
+        }
+        int rightsum=-10000;
+        sum=0;
+        for(int j=mid+1;j<=high;j++)
+        {
+            sum=sum+A[j];
+            if(sum>rightsum){
+                rightsum=sum;
+                maxright=j;
+            }
+        }
+        cross[0]=maxleft;
+        cross[1]=maxright;
+        cross[2]=leftsum+rightsum;
+        return cross;
+        
+    }
+    public static int[] findMaximumSubarray(int A[],int low,int high)
+    {
+        int subarray[]=new int[3];
+        if(high==low)
+        {
+            subarray[0]=low;
+            subarray[1]=high;
+            subarray[2]=A[low];
+            return subarray;
+        }
+        else{
+            int mid=(low+high)/2;
+            int left[]=findMaximumSubarray(A,low,mid);
+            int leftlow=left[0],lefthigh=left[1],leftsum=left[2];
+            int right[]=findMaximumSubarray(A,mid+1,high);
+            int rightlow=right[0],righthigh=right[1],rightsum=right[2];
+            int cross[]=findMaximumCrossSubarray(A,low,mid,high);
+            int crosslow=cross[0],crosshigh=cross[1],crosssum=cross[2];
+            if(leftsum>=rightsum && leftsum>=crosssum)
+            {
+                return left;
+            }
+            else if(rightsum>=leftsum && rightsum>=crosssum)
+            {
+                return right;
+            }
+            else{
+                return cross;
+            }
+        }
+    }
+	public static void main(String[] args) {
+		int A[]={13,-3,-25,20,-3,-16,-23,18,20,-7,12,-5,-22,15,-4,7};
+		int high=A.length-1;
+		int low=0;
+		int max[]=findMaximumSubarray(A,low,high);
+		int lowIndex=max[0],highIndex=max[1],maxSum=max[2];
+		System.out.println(lowIndex);
+		System.out.println(highIndex);
+		System.out.println(maxSum);
+		
+	}
+}
